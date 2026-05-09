@@ -1,0 +1,12 @@
+此文件需要使用 Excel 创建。以下是示例数据：
+
+客户名称    邮箱地址
+张三        zhangsan@example.com
+李四        lisi@example.com
+王五        wangwu@example.com
+赵六        zhaoliu@example.com
+
+请按照以下格式创建 Excel 文件：
+1. 第一行为表头：客户名称  邮箱地址
+2. 从第二行开始填写数据
+3. 保存为 .xlsx 格式

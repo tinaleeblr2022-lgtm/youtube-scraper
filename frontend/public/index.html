@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI获客工具 - YouTube频道抓取</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .input-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 12px;
+      border: 2px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .settings-row {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .setting-item {
+      flex: 1;
+    }
+
+    .setting-item input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .progress-section {
+      background: #e7f3ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      display: none;
+    }
+
+    .progress-section.active {
+      display: block;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 30px;
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .progress-text {
+      text-align: center;
+      margin-top: 10px;
+      color: #495057;
+      font-weight: 500;
+    }
+
+    .results-section {
+      display: none;
+    }
+
+    .results-section.active {
+      display: block;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .results-stats {
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    td {
+      font-size: 14px;
+      color: #495057;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    .contact-link {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contact-link:hover {
+      text-decoration: underline;
+    }
+
+    .no-contact {
+      color: #adb5bd;
+      font-style: italic;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+      border-left: 4px solid #dc3545;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+      border-left: 4px solid #28a745;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    /* 标签页导航 */
+    .tab-navigation {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 10px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #495057;
+      transition: all 0.3s;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #667eea;
+    }
+
+    .tab-button:hover:not(.active) {
+      background: #e9ecef;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* 邮件发送相关样式 */
+    .email-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .email-config, .email-content {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .config-group {
+      margin-bottom: 15px;
+    }
+
+    .config-group label {
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .config-group input, .config-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .file-upload-area {
+      border: 2px dashed #dee2e6;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .file-upload-area:hover {
+      border-color: #667eea;
+      background: #f8f9fa;
+    }
+
+    .file-upload-area.dragover {
+      border-color: #667eea;
+      background: #e7f3ff;
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-info {
+      display: none;
+      background: #d4edda;
+      color: #155724;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-left: 4px solid #28a745;
+    }
+
+    .file-info.active {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .template-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .template-select {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .checkbox-column {
+      width: 50px;
+      text-align: center;
+    }
+
+    .email-table th, .email-table td {
+      padding: 10px;
+    }
+
+    .send-progress {
+      background: #e7f3ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .send-progress.active {
+      display: block;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .stat-label {
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    .result-item {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .result-success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .result-failed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 AI获客工具</h1>
+    <p class="subtitle">YouTube频道抓取 + 邮件营销自动化</p>
+
+    <!-- 标签页导航 -->
+    <div class="tab-navigation">
+      <button class="tab-button active" onclick="switchTab('youtube')">YouTube抓取</button>
+      <button class="tab-button" onclick="switchTab('email')">邮件发送</button>
+    </div>
+
+    <!-- YouTube抓取标签页 -->
+    <div id="youtubeTab" class="tab-content active">
+    <div class="input-section">
+      <label for="youtubeUrl">YouTube 搜索结果页面链接</label>
+      <input
+        type="text"
+        id="youtubeUrl"
+        style="width:100%;padding:12px;border:2px solid #dee2e6;border-radius:6px;font-size:14px;"
+        placeholder="粘贴 YouTube 搜索结果页面的完整链接，例如：https://www.youtube.com/results?search_query=数字营销&sp=EgIIBQ%253D%253D"
+      >
+      <p style="font-size:12px;color:#868e96;margin-top:8px;">
+        使用方法：在 YouTube 搜索关键词 → 设置时间/类型筛选 → 复制浏览器地址栏链接 → 粘贴到此处
+      </p>
+
+      <div class="settings-row">
+        <div class="setting-item">
+          <label for="delay">抓取间隔（毫秒）</label>
+          <input
+            type="number"
+            id="delay"
+            value="2000"
+            min="500"
+            max="10000"
+            step="500"
+          >
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-primary" id="scrapeBtn" onclick="startScraping()">
+          开始抓取
+        </button>
+        <button class="btn-secondary" onclick="clearResults()">
+          清空结果
+        </button>
+      </div>
+    </div>
+
+    <div class="progress-section" id="progressSection">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill">0%</div>
+      </div>
+      <div class="progress-text" id="progressText">准备开始抓取...</div>
+    </div>
+
+    <div id="messageContainer"></div>
+
+    <div class="results-section" id="resultsSection">
+      <div class="results-header">
+        <h2>抓取结果</h2>
+        <div>
+          <span class="results-stats" id="resultsStats"></span>
+          <button class="btn-success" onclick="exportToExcel()">
+            📥 导出Excel
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th>频道名称</th>
+              <th>频道链接</th>
+              <th>国家地区</th>
+              <th>邮箱</th>
+              <th>Instagram</th>
+              <th>Telegram</th>
+              <th>Discord</th>
+              <th>其他联系方式</th>
+              <th>粉丝数</th>
+              <th>抓取时间</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+
+    <!-- 邮件发送标签页 -->
+    <div id="emailTab" class="tab-content">
+      <!-- SMTP配置和邮件内容 -->
+      <div class="email-section">
+        <div class="email-config">
+          <h3 style="margin-bottom: 15px;">📧 SMTP配置</h3>
+          <div class="config-group">
+            <label>发件邮箱</label>
+            <input type="email" id="smtpEmail" placeholder="your@email.com">
+          </div>
+          <div class="config-group">
+            <label>SMTP服务器</label>
+            <input type="text" id="smtpHost" placeholder="smtp.gmail.com">
+          </div>
+          <div class="config-group">
+            <label>端口</label>
+            <input type="number" id="smtpPort" placeholder="587" value="587">
+          </div>
+          <div class="config-group">
+            <label>密码/授权码</label>
+            <input type="password" id="smtpPass" placeholder="邮箱密码或授权码">
+          </div>
+          <button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="testSMTP()">
+            测试连接
+          </button>
+          <div id="smtpMessageContainer"></div>
+        </div>
+
+        <div class="email-content">
+          <h3 style="margin-bottom: 15px;">✉️ 邮件内容</h3>
+          <div class="template-actions">
+            <select class="template-select" id="templateSelect" onchange="loadTemplate()">
+              <option value="">-- 选择模板 --</option>
+            </select>
+            <button class="btn-secondary" onclick="saveTemplate()">保存模板</button>
+            <button class="btn-secondary" onclick="deleteTemplate()">删除模板</button>
+          </div>
+          <div class="config-group">
+            <label>邮件标题</label>
+            <input type="text" id="emailSubject" placeholder="合作邀请：{客户名称}您好！">
+          </div>
+          <div class="config-group">
+            <label>邮件正文（使用 {客户名称} 作为变量）</label>
+            <textarea id="emailBody" style="min-height: 200px;" placeholder="尊敬的 {客户名称}，您好！&#10;&#10;我是..."></textarea>
+          </div>
+          <div class="config-group">
+            <label>发送间隔（秒）</label>
+            <input type="number" id="sendInterval" value="2" min="1" max="60">
+          </div>
+        </div>
+      </div>
+
+      <!-- Excel上传 -->
+      <div class="input-section">
+        <h3 style="margin-bottom: 15px;">📁 上传客户列表</h3>
+        <div class="file-upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📤</div>
+          <p>点击或拖拽上传 Excel 文件（.xlsx）</p>
+          <p style="font-size: 12px; color: #6c757d; margin-top: 10px;">
+            Excel包含：客户名称、邮箱地址（自动识别列名）
+          </p>
+          <input type="file" id="fileInput" class="file-input" accept=".xlsx" onchange="handleFileUpload(event)">
+        </div>
+        <div class="file-info" id="fileInfo"></div>
+
+        <!-- 客户列表表格 -->
+        <div id="customerTableSection" style="display: none;">
+          <div class="results-header">
+            <h4>客户列表</h4>
+            <div>
+              <label style="display: inline; margin-right: 10px;">
+                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" checked>
+                全选
+              </label>
+              <button class="btn-success" onclick="sendEmails()">📧 发送邮件</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="email-table">
+              <thead>
+                <tr>
+                  <th class="checkbox-column">选择</th>
+                  <th>序号</th>
+                  <th>客户名称</th>
+                  <th>邮箱地址</th>
+                </tr>
+              </thead>
+              <tbody id="customerTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 发送进度 -->
+      <div class="send-progress" id="sendProgress">
+        <h3 style="margin-bottom: 15px;">📊 发送进度</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="emailProgressFill">0%</div>
+        </div>
+        <div class="progress-text" id="emailProgressText">准备发送...</div>
+        <div class="progress-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">总数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statSent">0</div>
+            <div class="stat-label">已发送</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statSuccess" style="color: #28a745;">0</div>
+            <div class="stat-label">成功</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statFailed" style="color: #dc3545;">0</div>
+            <div class="stat-label">失败</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 发送结果 -->
+      <div id="emailResultsSection" style="display: none;">
+        <div class="results-header">
+          <h3>📋 发送结果</h3>
+          <button class="btn-primary" onclick="retryFailed()">🔄 重试失败邮件</button>
+        </div>
+        <div id="emailResultsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
