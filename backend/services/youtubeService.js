@@ -12,16 +12,17 @@ class YouTubeService {
 
   async getBrowser() {
     if (!this.browser) {
-      console.log('🌐 启动浏览器，使用代理: http://127.0.0.1:7890');
+      console.log('🌐 启动无头浏览器...');
 
       try {
         this.browser = await puppeteer.launch({
-          headless: false,
-          executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+          headless: true,
           args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
-            '--proxy-server=http://127.0.0.1:7890'
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--window-size=1920,1080'
           ]
         });
 

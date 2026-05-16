@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'http://47.86.176.227:3001/api';
 let scrapedData = [];
 let emailCustomers = [];
 let emailSendResults = [];
