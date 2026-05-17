@@ -365,7 +365,7 @@ class YouTubeService {
 
     } catch (error) {
       console.error(`获取频道详情失败:`, error.message);
-      return null;
+      throw error;
     } finally {
       await page.close();
     }
