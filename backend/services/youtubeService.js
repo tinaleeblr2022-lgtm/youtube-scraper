@@ -88,13 +88,13 @@ class YouTubeService {
       console.log(`  🌐 正在访问用户提供的页面...`);
 
       await page.goto(searchUrl, {
-        waitUntil: 'domcontentloaded',
-        timeout: 60000
+        waitUntil: 'networkidle2',
+        timeout: 120000
       });
       console.log(`  ✅ 页面加载成功`);
 
       // 等待页面内容加载
-      await sleep(5000);
+      await sleep(3000);
 
       // 保存截图用于调试
       const screenshotPath = `/tmp/youtube-debug-${Date.now()}.png`;
@@ -246,11 +246,11 @@ class YouTubeService {
 
       await page.goto(aboutUrl, {
         waitUntil: 'networkidle2',
-        timeout: 30000
+        timeout: 60000
       });
 
       // 等待页面加载
-      await sleep(3000);
+      await sleep(2000);
 
       // 提取频道信息
       const channelData = await page.evaluate(() => {
