@@ -16,6 +16,7 @@ class YouTubeService {
 
       try {
         this.browser = await puppeteer.launch({
+          executablePath: '/usr/bin/chromium-browser',
           headless: true,
           args: [
             '--no-sandbox',
