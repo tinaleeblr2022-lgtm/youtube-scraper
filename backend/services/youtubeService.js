@@ -246,12 +246,12 @@ class YouTubeService {
       }
 
       await page.goto(aboutUrl, {
-        waitUntil: 'networkidle2',
-        timeout: 60000
+        waitUntil: 'domcontentloaded',
+        timeout: 120000
       });
 
       // 等待页面加载
-      await sleep(2000);
+      await sleep(5000);
 
       // 提取频道信息
       const channelData = await page.evaluate(() => {
