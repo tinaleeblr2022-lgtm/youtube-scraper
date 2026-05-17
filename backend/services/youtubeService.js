@@ -86,6 +86,9 @@ class YouTubeService {
 
       await page.setViewport({ width: 1920, height: 1080 });
 
+      // 设置导航超时
+      page.setDefaultNavigationTimeout(120000);
+
       console.log(`  🌐 正在访问用户提供的页面...`);
 
       await page.goto(searchUrl, {
@@ -234,6 +237,9 @@ class YouTubeService {
 
       await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
       await page.setViewport({ width: 1920, height: 1080 });
+
+      // 设置导航超时
+      page.setDefaultNavigationTimeout(120000);
 
       // 访问频道About页面
       let aboutUrl;
