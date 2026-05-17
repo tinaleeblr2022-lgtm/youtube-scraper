@@ -89,13 +89,13 @@ class YouTubeService {
       console.log(`  🌐 正在访问用户提供的页面...`);
 
       await page.goto(searchUrl, {
-        waitUntil: 'networkidle2',
+        waitUntil: 'domcontentloaded',
         timeout: 120000
       });
       console.log(`  ✅ 页面加载成功`);
 
       // 等待页面内容加载
-      await sleep(3000);
+      await sleep(8000);
 
       // 保存截图用于调试
       const screenshotPath = `/tmp/youtube-debug-${Date.now()}.png`;
